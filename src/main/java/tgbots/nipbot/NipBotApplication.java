@@ -11,4 +11,5 @@ public class NipBotApplication {
     public static void main(String[] args) {
         SpringApplication.run(NipBotApplication.class, args);
     }
+
 }
