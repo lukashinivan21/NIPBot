@@ -1,4 +1,4 @@
-package tgbots.nipbot.listener;
+package tgbots.nipbot.botapi.listener;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;

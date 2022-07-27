@@ -9,13 +9,13 @@ import javax.persistence.*;
 public class Volunteer {
 
     @Id
-    @Column(name = "id-volunteer")
+    @Column(name = "id_volunteer")
     private Long id;
 
-    @Column(name = "name-volunteer")
+    @Column(name = "name_volunteer")
     private String name;
 
-    @Column(name = "username-volunteer")
+    @Column(name = "username_volunteer")
     private String username;
 
     @Column(name = "password")

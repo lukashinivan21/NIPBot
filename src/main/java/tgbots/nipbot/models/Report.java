@@ -1,30 +1,34 @@
 package tgbots.nipbot.models;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "reports")
 public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id-report")
+    @Column(name = "id_report")
     private Long id;
 
-    @Column(name = "id-candidate")
+    @Column(name = "id_candidate")
     private Long idCandidate;
 
-    @Column(name = "path-image")
+    @Column(name = "path_image")
     private String pathImage;
 
     @Column(name = "diet")
     private String diet;
 
-    @Column(name = "general-health")
+    @Column(name = "general_health")
     private String generalHealth;
 
-    @Column(name = "date-time")
-    private LocalDateTime dateTime;
+    @Column(name = "date")
+    private LocalDate date;
+
+    @Column(name = "time")
+    private LocalTime time;
 
     /*@ManyToOne
     @JoinColumn(name = "id-volunteer")
@@ -53,8 +57,12 @@ public class Report {
         return generalHealth;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public LocalTime getTime() {
+        return time;
     }
 
     public void setId(Long id) {
@@ -77,8 +85,12 @@ public class Report {
         this.generalHealth = generalHealth;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
     }
 
     @Override
@@ -89,7 +101,8 @@ public class Report {
                 ", pathImage='" + pathImage + '\'' +
                 ", diet='" + diet + '\'' +
                 ", generalHealth='" + generalHealth + '\'' +
-                ", dateTime=" + dateTime +
+                ", date=" + date +
+                ", time=" + time +
                 '}';
     }
 }

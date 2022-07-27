@@ -8,10 +8,10 @@ public class Dog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id-dog")
+    @Column(name = "id_dog")
     private Long id;
 
-    @Column(name = "name-dog")
+    @Column(name = "name_dog")
     private String name;
 
     @Column(name = "age")

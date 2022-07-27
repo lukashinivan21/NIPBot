@@ -7,13 +7,13 @@ import javax.persistence.*;
 public class Candidate {
 
     @Id
-    @Column(name = "id-candidate")
+    @Column(name = "id_candidate")
     private Long id;
 
-    @Column(name = "name-candidate")
+    @Column(name = "name_candidate")
     private String name;
 
-    @Column(name = "username-candidate")
+    @Column(name = "username_candidate")
     private String username;
 
     @Column(name = "phoneNumber")
