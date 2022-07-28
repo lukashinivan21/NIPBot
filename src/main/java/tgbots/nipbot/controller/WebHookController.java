@@ -1,3 +1,4 @@
+/*
 package tgbots.nipbot.controller;
 
 import org.springframework.web.bind.annotation.RequestBody;
@@ -7,9 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+*/
 /**
  * Контроллер, принимающий входящие запросы от пользователя
- */
+ *//*
+
 @RestController
 public class WebHookController {
 
@@ -24,3 +27,4 @@ public class WebHookController {
         return nipBot.onWebhookUpdateReceived(update);
     }
 }
+*/

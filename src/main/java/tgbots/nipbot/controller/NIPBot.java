@@ -1,3 +1,4 @@
+/*
 package tgbots.nipbot.controller;
 
 import org.telegram.telegrambots.bots.DefaultBotOptions;
@@ -10,24 +11,32 @@ import tgbots.nipbot.service.Handler;
 
 import static tgbots.nipbot.constants.StringConstants.LIST_CALLBACKS;
 
+*/
 /**
  * Класс, содержащий главные поля и методы для работы бота
- */
+ *//*
+
 public class NIPBot extends TelegramWebhookBot {
 
     private final Handler handler;
 
-    /**
+    */
+/**
      * Поле для адреса, по которому происходит обращение к боту
-     */
+     *//*
+
     private String webHookPath;
-    /**
+    */
+/**
      * Поле для именя бота
-     */
+     *//*
+
     private String botUsername;
-    /**
+    */
+/**
      * Поле для уникального ключа бота
-     */
+     *//*
+
     private String token;
 
     public NIPBot(DefaultBotOptions botOptions, Handler handler) {
@@ -62,11 +71,13 @@ public class NIPBot extends TelegramWebhookBot {
         this.token = token;
     }
 
-    /**
+    */
+/**
      * Основной метод, отвечающий за отправку ответов на сообщения пользователя
      * Исрользует методы интерфейса {@link Handler}
      * @return {@link BotApiMethod}
-     */
+     *//*
+
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
         SendDocument sendDocument = null;
@@ -85,6 +96,5 @@ public class NIPBot extends TelegramWebhookBot {
         }
         return handler.sendingMessage(update);
     }
-
-
 }
+*/
