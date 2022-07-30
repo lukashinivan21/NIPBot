@@ -10,6 +10,9 @@ import tgbots.nipbot.service.ReplyKeyboard;
 
 import static tgbots.nipbot.constants.TextForButtons.*;
 
+/**
+ * Класс, служащий для обработки обновления с {@link CallbackQuery}.
+ */
 @Service
 public class HandlerCallbackQuery implements Handler{
 
@@ -19,6 +22,12 @@ public class HandlerCallbackQuery implements Handler{
         this.replyKeyboard = replyKeyboard;
     }
 
+    /**
+     * Метод обрабатывает обновление с CallbackQuery.
+     * В зависимости от содержания добавляет в ответное сообщение определенную клавиатуру и текст
+     * @param update, отфильраванный, содержащий CallbackQuery
+     * @return {@link BaseRequest} с необходимыми добавлениями или null
+     */
     @Override
     public BaseRequest handle(Update update){
         CallbackQuery clb = update.callbackQuery();

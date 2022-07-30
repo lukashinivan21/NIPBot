@@ -9,6 +9,9 @@ import tgbots.nipbot.service.ReplyKeyboard;
 
 import static tgbots.nipbot.constants.TextForButtons.*;
 
+/**
+ * Класс, служащий для обработки обновления {@link Message}.
+ */
 @Service
 public class HandlerMessages implements Handler{
 
@@ -18,6 +21,12 @@ public class HandlerMessages implements Handler{
         this.replyKeyboard = replyKeyboard;
     }
 
+    /**
+     * Метод обрабатывает обновление с сообщением.
+     * В зависимости от содержания добавляет в ответное сообщение определенную клавиатуру и текст
+     * @param update, отфильраванный, содержащий сообщение
+     * @return {@link BaseRequest} с необходимыми добавлениями или null
+     */
     @Override
     public BaseRequest handle(Update update){
         Message msg = update.message();
@@ -37,13 +46,17 @@ public class HandlerMessages implements Handler{
         } else if(text.equals(SEND_PET_REPORT.getTextButton())){
             return null;
         } else if(text.equals(CALL_VOLUNTEER.getTextButton())){
-            return null;
+            return new SendMessage(chatId, CALL_VOLUNTEER.getResponse());
         }
         return new SendMessage(chatId, DEFAULT.getTextButton());
     }
 
+    /**
+     * Метод проверяет первый раз пользователь запускает бота или нет
+     * @return true, если пользователь первый раз запускает бота, иначе false
+     */
     private boolean isFirstTimeUser(){
-
+        //НЕ ЗАБЫТЬ!!!
         return true;
     }
 }
