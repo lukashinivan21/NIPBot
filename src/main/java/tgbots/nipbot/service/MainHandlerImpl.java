@@ -16,7 +16,7 @@ import static tgbots.nipbot.constants.StringConstants.*;
  * Класс, содержащий логику обработки обновлений, приходящих от пользователя в чат
  */
 @Service
-public class MainHandlerImpl implements Handler{
+public class MainHandlerImpl {
 
     private final HandlerInputUpdate handlerInputUpdate;
 
@@ -30,7 +30,6 @@ public class MainHandlerImpl implements Handler{
      * Метод для обработки обновления и возвращения текстового сообщения (при необходимости с клавиатурой)
      * @return {@link SendMessage}
      */
-    @Override
     public SendMessage sendingMessage(Update update) {
         SendMessage result = null;
 
@@ -54,7 +53,6 @@ public class MainHandlerImpl implements Handler{
      * Метод для обработки обновлений и возвращения документа с инструкцией или справочной информацией
      * @return {@link SendMessage}
      */
-    @Override
     public SendDocument sendingDocument(Update update) {
         CallbackQuery callbackQuery = update.getCallbackQuery();
         String data = callbackQuery.getData();
