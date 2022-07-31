@@ -42,9 +42,9 @@ public class HandlerMessages implements Handler{
         } else if(text.equals(INFO_ABOUT_DOG_SHELTER.getTextButton())){
             return replyKeyboard.addInfoMenu(new SendMessage(chatId, INFO_ABOUT_DOG_SHELTER.getResponse()));
         } else if(text.equals(HOW_TAKE_DOG_FROM_SHELTER.getTextButton())){
-            return null;
+            return replyKeyboard.addTakeDogMenu(new SendMessage(chatId, HOW_TAKE_DOG_FROM_SHELTER.getResponse()));
         } else if(text.equals(SEND_PET_REPORT.getTextButton())){
-            return null;
+            return replyKeyboard.addReportMenu(new SendMessage(chatId, SEND_PET_REPORT.getResponse()));
         } else if(text.equals(CALL_VOLUNTEER.getTextButton())){
             return new SendMessage(chatId, CALL_VOLUNTEER.getResponse());
         }
