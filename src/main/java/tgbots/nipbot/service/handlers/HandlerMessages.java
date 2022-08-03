@@ -2,10 +2,16 @@ package tgbots.nipbot.service.handlers;
 
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.stereotype.Service;
+import tgbots.nipbot.models.Candidate;
 import tgbots.nipbot.service.ReplyKeyboard;
+import tgbots.nipbot.service.Validation;
+import tgbots.nipbot.service.by_models.CandidateServiceImpl;
+
+import java.util.Objects;
 
 import static tgbots.nipbot.constants.TextForButtons.*;
 
@@ -16,9 +22,11 @@ import static tgbots.nipbot.constants.TextForButtons.*;
 public class HandlerMessages implements Handler{
 
     private final ReplyKeyboard replyKeyboard;
+    private final CandidateServiceImpl candidateService;
 
-    public HandlerMessages(ReplyKeyboard replyKeyboard) {
+    public HandlerMessages(ReplyKeyboard replyKeyboard, CandidateServiceImpl candidateService) {
         this.replyKeyboard = replyKeyboard;
+        this.candidateService = candidateService;
     }
 
     /**
@@ -30,14 +38,18 @@ public class HandlerMessages implements Handler{
     @Override
     public BaseRequest handle(Update update){
         Message msg = update.message();
-        String name = msg.from().firstName();
+        User from = msg.from();
+        String firstName = from.firstName();
+        String secondName = from.lastName();
+        String username = from.username();
         String text = msg.text();
         Long chatId = msg.chat().id();
         if (text.equals(START_NEW.getTextButton())) {
-            if (isFirstTimeUser()) {
-                return replyKeyboard.addMainMenu(new SendMessage(chatId, START_NEW.getResponse().replace("@NAME", name)));
+            if (isFirstTimeUser(chatId)) {
+                candidateService.addCandidate(Candidate.create(chatId, firstName, secondName, username));
+                return replyKeyboard.addMainMenu(new SendMessage(chatId, START_NEW.getResponse().replace("@NAME", firstName)));
             } else {
-                return replyKeyboard.addMainMenu(new SendMessage(chatId, START_OLD.getResponse().replace("@NAME", name)));
+                return replyKeyboard.addMainMenu(new SendMessage(chatId, START_OLD.getResponse().replace("@NAME", firstName)));
             }
         } else if(text.equals(INFO_ABOUT_DOG_SHELTER.getTextButton())){
             return replyKeyboard.addInfoMenu(new SendMessage(chatId, INFO_ABOUT_DOG_SHELTER.getResponse()));
@@ -47,6 +59,8 @@ public class HandlerMessages implements Handler{
             return replyKeyboard.addReportMenu(new SendMessage(chatId, SEND_PET_REPORT.getResponse()));
         } else if(text.equals(CALL_VOLUNTEER.getTextButton())){
             return new SendMessage(chatId, CALL_VOLUNTEER.getResponse());
+        } else if(Validation.isValidPhoneNumberAndFullName(text)){
+            return new SendMessage(chatId, Objects.requireNonNull(Validation.createCandidateFromRegex(text)).toString());
         }
         return new SendMessage(chatId, DEFAULT.getTextButton());
     }
@@ -55,8 +69,11 @@ public class HandlerMessages implements Handler{
      * Метод проверяет первый раз пользователь запускает бота или нет
      * @return true, если пользователь первый раз запускает бота, иначе false
      */
-    private boolean isFirstTimeUser(){
-        //НЕ ЗАБЫТЬ!!!
+    private boolean isFirstTimeUser(Long id){
+        Candidate candidate = candidateService.findCandidateById(id);
+        if(candidate != null){
+            return false;
+        }
         return true;
     }
 }

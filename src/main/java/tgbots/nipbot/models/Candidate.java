@@ -1,6 +1,8 @@
 package tgbots.nipbot.models;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "candidates")
@@ -10,8 +12,11 @@ public class Candidate {
     @Column(name = "id_candidate")
     private Long id;
 
-    @Column(name = "name_candidate")
-    private String name;
+    @Column(name = "first_name_candidate")
+    private String firstName;
+
+    @Column(name = "second_name_candidate")
+    private String secondName;
 
     @Column(name = "username_candidate")
     private String username;
@@ -19,61 +24,103 @@ public class Candidate {
     @Column(name = "phoneNumber")
     private String phoneNumber;
 
-    /*@OneToOne(cascade = CascadeType.ALL)
-    @JoinTable(name = "candidate-dog",
-            joinColumns = @JoinColumn(name = "id-candidate", referencedColumnName = "id-candidate"),
-            inverseJoinColumns = @JoinColumn(name = "id_dog", referencedColumnName = "id-dog"))
-    private Dog dog;*/
+    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Report> reports = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_period", referencedColumnName = "id_period")
+    private Period period;
 
     public Candidate() {
     }
 
-    private Candidate(Long id, String name, String username, String phoneNumber) {
+    private Candidate(Long id, String firstName, String secondName, String username) {
         this.id = id;
-        this.name = name;
+        this.firstName = firstName;
+        this.secondName = secondName;
         this.username = username;
-        this.phoneNumber = phoneNumber;
     }
 
-    public Candidate create(Long id, String name, String username, String phoneNumber){
-        return new Candidate(id, name, username, phoneNumber);
+    public static Candidate create(Long id, String firstName, String secondName, String username){
+        return new Candidate(id, firstName , secondName, username);
+    }
+
+    public void addReport(Report report){
+        reports.add(report);
+        report.setCandidate(this);
+    }
+
+    public void removeRemove(Report report){
+        reports.remove(report);
+        report.setCandidate(null);
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
+    public List<Report> getReports() {
+        return reports;
+    }
+
+    public void setReports(List<Report> reports) {
+        this.reports = reports;
+    }
+
+    public Period getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(Period period) {
+        this.period = period;
+    }
+
     @Override
     public String toString() {
         return "Candidate{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", secondName='" + secondName + '\'' +
                 ", username='" + username + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", reports=" + reports +
+                ", period=" + period +
                 '}';
     }
 }
