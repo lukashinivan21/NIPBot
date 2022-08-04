@@ -25,11 +25,11 @@ create table volunteers(
 
 create table reports(
     id_report bigserial unique not null,
-    id_candidate bigint not null,
     path_image text,
     diet text,
     general_health text,
-    date date
+    date date,
+    candidate_id_candidate bigint references candidates(id_candidate)
 );
 
 create table periods(

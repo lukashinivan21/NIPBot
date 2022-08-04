@@ -4,7 +4,7 @@ import tgbots.nipbot.models.Volunteer;
 
 public interface VolunteerService {
 
-    public Volunteer addVolunteer(Volunteer volunteer);
+    public Volunteer saveVolunteer(Volunteer volunteer);
 
     public Volunteer updateVolunteer(Volunteer volunteer);
 

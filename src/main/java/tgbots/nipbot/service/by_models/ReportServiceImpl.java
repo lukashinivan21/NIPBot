@@ -16,7 +16,7 @@ public class ReportServiceImpl implements ReportService {
         this.reportRepository = reportRepository;
     }
 
-    public Report addReport(Report report){
+    public Report saveReport(Report report){
         return reportRepository.save(report);
     }
 

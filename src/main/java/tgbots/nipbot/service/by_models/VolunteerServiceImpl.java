@@ -16,7 +16,7 @@ public class VolunteerServiceImpl implements VolunteerService {
         this.volunteerRepository = volunteerRepository;
     }
 
-    public Volunteer addVolunteer(Volunteer volunteer){
+    public Volunteer saveVolunteer(Volunteer volunteer){
         return volunteerRepository.save(volunteer);
     }
 

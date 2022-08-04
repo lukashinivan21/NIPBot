@@ -21,14 +21,14 @@ public class Candidate {
     @Column(name = "username_candidate")
     private String username;
 
-    @Column(name = "phoneNumber")
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Report> reports = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_period", referencedColumnName = "id_period")
+    @OneToOne
+    @PrimaryKeyJoinColumn
     private Period period;
 
     public Candidate() {

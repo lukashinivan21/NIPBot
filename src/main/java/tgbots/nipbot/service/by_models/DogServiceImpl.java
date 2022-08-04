@@ -16,7 +16,7 @@ public class DogServiceImpl implements DogService {
         this.dogRepository = dogRepository;
     }
 
-    public Dog addDog(Dog dog){
+    public Dog saveDog(Dog dog){
         return dogRepository.save(dog);
     }
 

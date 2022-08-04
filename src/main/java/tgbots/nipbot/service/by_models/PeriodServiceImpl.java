@@ -1,7 +1,6 @@
 package tgbots.nipbot.service.by_models;
 
 import org.springframework.stereotype.Service;
-import tgbots.nipbot.models.Dog;
 import tgbots.nipbot.models.Period;
 import tgbots.nipbot.repositories.PeriodRepository;
 import tgbots.nipbot.service.by_models.interfaces.PeriodService;
@@ -17,7 +16,7 @@ public class PeriodServiceImpl implements PeriodService {
         this.periodRepository = periodRepository;
     }
 
-    public Period addPeriod(Period period){
+    public Period savePeriod(Period period){
         return periodRepository.save(period);
     }
 

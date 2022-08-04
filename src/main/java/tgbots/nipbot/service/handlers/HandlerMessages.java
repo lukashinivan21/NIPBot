@@ -11,8 +11,6 @@ import tgbots.nipbot.service.ReplyKeyboard;
 import tgbots.nipbot.service.Validation;
 import tgbots.nipbot.service.by_models.CandidateServiceImpl;
 
-import java.util.Objects;
-
 import static tgbots.nipbot.constants.TextForButtons.*;
 
 /**
@@ -46,7 +44,7 @@ public class HandlerMessages implements Handler{
         Long chatId = msg.chat().id();
         if (text.equals(START_NEW.getTextButton())) {
             if (isFirstTimeUser(chatId)) {
-                candidateService.addCandidate(Candidate.create(chatId, firstName, secondName, username));
+                candidateService.saveCandidate(Candidate.create(chatId, firstName, secondName, username));
                 return replyKeyboard.addMainMenu(new SendMessage(chatId, START_NEW.getResponse().replace("@NAME", firstName)));
             } else {
                 return replyKeyboard.addMainMenu(new SendMessage(chatId, START_OLD.getResponse().replace("@NAME", firstName)));
@@ -60,7 +58,8 @@ public class HandlerMessages implements Handler{
         } else if(text.equals(CALL_VOLUNTEER.getTextButton())){
             return new SendMessage(chatId, CALL_VOLUNTEER.getResponse());
         } else if(Validation.isValidPhoneNumberAndFullName(text)){
-            return new SendMessage(chatId, Objects.requireNonNull(Validation.createCandidateFromRegex(text)).toString());
+            candidateService.updateCandidate(msg, text);
+            return new SendMessage(chatId, CONTACT_SAVE.getResponse());
         }
         return new SendMessage(chatId, DEFAULT.getTextButton());
     }
