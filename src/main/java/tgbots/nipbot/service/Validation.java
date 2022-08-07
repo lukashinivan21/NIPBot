@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 public class Validation {
 
     public final static Pattern PATTERN_PHONE_NUMBER_AND_FULL_NAME = Pattern.compile("^(([+]7|8)[0-9]{10})\\s+(([а-яёА-яЁ]+|[a-zA-Z]+\\s*)|(([а-яёА-яЁ]+|[a-zA-Z]+)\\s+([а-яёА-яЁ]+|[a-zA-Z]+)))\\s*$");
+    public final static Pattern PATTERN_PHONE_NUMBER = Pattern.compile("^(([+]7|8)[0-9]{10})$");
 
     public Validation() {
     }

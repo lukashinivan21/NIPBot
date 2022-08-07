@@ -1,5 +1,7 @@
 package tgbots.nipbot.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -20,7 +22,8 @@ public class Period {
     @Column(name = "extra_days")
     private Integer extraDays;
 
-    @OneToOne(mappedBy = "period")
+    @JsonIgnore
+    @OneToOne(mappedBy = "period", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Candidate candidate;
 
     public Period() {

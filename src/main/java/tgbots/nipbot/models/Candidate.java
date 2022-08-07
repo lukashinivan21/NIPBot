@@ -24,10 +24,10 @@ public class Candidate {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL)
     private List<Report> reports = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @PrimaryKeyJoinColumn
     private Period period;
 

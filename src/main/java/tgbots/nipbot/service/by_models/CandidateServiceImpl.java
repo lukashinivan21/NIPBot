@@ -2,10 +2,15 @@ package tgbots.nipbot.service.by_models;
 
 import com.pengrad.telegrambot.model.Message;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 import tgbots.nipbot.models.Candidate;
+import tgbots.nipbot.models.Period;
 import tgbots.nipbot.repositories.CandidateRepository;
 import tgbots.nipbot.service.by_models.interfaces.CandidateService;
 
+import javax.persistence.EntityExistsException;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 
@@ -20,14 +25,37 @@ public class CandidateServiceImpl implements CandidateService {
         this.candidateRepository = candidateRepository;
     }
 
-    public Candidate saveCandidate(Candidate candidate){
-        return candidateRepository.save(candidate);
+    @Override
+    public Candidate saveCandidate(Candidate candidate, boolean addPeriod){
+        if(candidateRepository.findById(candidate.getId()).isEmpty()){
+            if(addPeriod){
+                Period period = new Period();
+                period.setStartDate(LocalDate.now());
+                period.setTrialDays(30);
+                period.setCandidate(candidate);
+                candidate.setPeriod(period);
+            }
+            return candidateRepository.save(candidate);
+        }
+        throw new EntityExistsException();
     }
 
+    @Override
     public Candidate updateCandidate(Candidate candidate){
-        return candidateRepository.save(candidate);
+        Optional<Candidate> candidateOptional = candidateRepository.findById(candidate.getId());
+        if(candidateOptional.isPresent()){
+            Candidate candidateByOptional = candidateOptional.get();
+            candidateByOptional.setFirstName(candidate.getFirstName());
+            if(candidateByOptional.getSecondName() == null){
+                candidateByOptional.setSecondName(candidate.getSecondName());
+            }
+            candidateByOptional.setPhoneNumber(candidate.getPhoneNumber());
+            return candidateRepository.save(candidateByOptional);
+        }
+        throw new NotFoundException(candidate + " Not found");
     }
 
+    @Override
     public Candidate updateCandidate(Message msg, String candidateString){
         Matcher matcher = PATTERN_PHONE_NUMBER_AND_FULL_NAME.matcher(candidateString);
         if (matcher.matches()) {
@@ -47,15 +75,22 @@ public class CandidateServiceImpl implements CandidateService {
             candidateRepository.save(candidate);
             return candidate;
         }
-        throw new NullPointerException();
+        throw new NotFoundException(candidateString + " Not found");
     }
 
+    @Override
     public Candidate findCandidateById(Long id){
         Optional<Candidate> candidateOptional = candidateRepository.findById(id);
         return candidateOptional.orElse(null);
     }
 
+    @Override
     public void removeCandidate(Long id){
         candidateRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Candidate> findAll(){
+        return candidateRepository.findAll();
     }
 }

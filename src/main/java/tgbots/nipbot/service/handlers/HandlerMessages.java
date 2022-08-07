@@ -44,7 +44,7 @@ public class HandlerMessages implements Handler{
         Long chatId = msg.chat().id();
         if (text.equals(START_NEW.getTextButton())) {
             if (isFirstTimeUser(chatId)) {
-                candidateService.saveCandidate(Candidate.create(chatId, firstName, secondName, username));
+                candidateService.saveCandidate(Candidate.create(chatId, firstName, secondName, username), false);
                 return replyKeyboard.addMainMenu(new SendMessage(chatId, START_NEW.getResponse().replace("@NAME", firstName)));
             } else {
                 return replyKeyboard.addMainMenu(new SendMessage(chatId, START_OLD.getResponse().replace("@NAME", firstName)));

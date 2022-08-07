@@ -1,5 +1,7 @@
 package tgbots.nipbot.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -23,7 +25,8 @@ public class Report {
     @Column(name = "date")
     private LocalDate date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Candidate candidate;
 
     public Report() {

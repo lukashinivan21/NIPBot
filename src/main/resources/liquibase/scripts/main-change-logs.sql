@@ -2,7 +2,7 @@
 
 --changeset pavel:1
 create table candidates(
-    id_candidate bigint unique not null,
+    id_candidate bigint unique not null primary key,
     first_name_candidate text not null,
     second_name_candidate text,
     username_candidate text,
@@ -10,13 +10,13 @@ create table candidates(
 );
 
 create table dogs(
-    id_dog bigserial unique not null,
+    id_dog bigserial unique not null primary key,
     name_dog text not null,
     age real
 );
 
 create table volunteers(
-    id_volunteer bigint unique not null,
+    id_volunteer bigint unique not null primary key,
     first_name_volunteer text not null,
     second_name_volunteer text,
     username_volunteer text,
@@ -24,16 +24,15 @@ create table volunteers(
 );
 
 create table reports(
-    id_report bigserial unique not null,
+    id_report bigserial unique not null primary key,
     path_image text,
     diet text,
     general_health text,
-    date date,
-    candidate_id_candidate bigint references candidates(id_candidate)
+    date date
 );
 
 create table periods(
-    id_period bigserial unique not null,
+    id_period bigserial unique not null primary key,
     start_date date not null,
     trial_days int default 30,
     extra_days int
