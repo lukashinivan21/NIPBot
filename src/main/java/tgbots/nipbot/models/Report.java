@@ -88,4 +88,5 @@ public class Report {
                 ", candidate=" + candidate +
                 '}';
     }
+
 }
