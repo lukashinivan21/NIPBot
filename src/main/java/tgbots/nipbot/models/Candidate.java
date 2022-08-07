@@ -6,6 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "candidates")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Candidate {
 
     @Id
