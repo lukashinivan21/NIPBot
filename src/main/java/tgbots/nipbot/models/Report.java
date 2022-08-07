@@ -1,8 +1,9 @@
 package tgbots.nipbot.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Entity
 @Table(name = "reports")
@@ -11,9 +12,6 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id_report")
     private Long id;
-
-    @Column(name = "id_candidate")
-    private Long idCandidate;
 
     @Column(name = "path_image")
     private String pathImage;
@@ -27,12 +25,9 @@ public class Report {
     @Column(name = "date")
     private LocalDate date;
 
-    @Column(name = "time")
-    private LocalTime time;
-
-    /*@ManyToOne
-    @JoinColumn(name = "id-volunteer")
-    private Volunteer volunteer;*/
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Candidate candidate;
 
     public Report() {
     }
@@ -41,68 +36,60 @@ public class Report {
         return id;
     }
 
-    public Long getIdCandidate() {
-        return idCandidate;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getPathImage() {
         return pathImage;
     }
 
-    public String getDiet() {
-        return diet;
-    }
-
-    public String getGeneralHealth() {
-        return generalHealth;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setIdCandidate(Long idCandidate) {
-        this.idCandidate = idCandidate;
-    }
-
     public void setPathImage(String pathImage) {
         this.pathImage = pathImage;
+    }
+
+    public String getDiet() {
+        return diet;
     }
 
     public void setDiet(String diet) {
         this.diet = diet;
     }
 
+    public String getGeneralHealth() {
+        return generalHealth;
+    }
+
     public void setGeneralHealth(String generalHealth) {
         this.generalHealth = generalHealth;
+    }
+
+    public LocalDate getDate() {
+        return date;
     }
 
     public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public void setTime(LocalTime time) {
-        this.time = time;
+    public Candidate getCandidate() {
+        return candidate;
+    }
+
+    public void setCandidate(Candidate candidate) {
+        this.candidate = candidate;
     }
 
     @Override
     public String toString() {
         return "Report{" +
                 "id=" + id +
-                ", idCandidate=" + idCandidate +
                 ", pathImage='" + pathImage + '\'' +
                 ", diet='" + diet + '\'' +
                 ", generalHealth='" + generalHealth + '\'' +
                 ", date=" + date +
-                ", time=" + time +
+                ", candidate=" + candidate +
                 '}';
     }
+
 }
