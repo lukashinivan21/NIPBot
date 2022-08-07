@@ -29,4 +29,22 @@ create table reports(
     general_health text,
     date date,
     time time
-)
+);
+
+-- changeSet ivan:2
+
+CREATE TABLE dog_candidates
+(
+    id_candidate       bigint PRIMARY KEY,
+    name_candidate     TEXT,
+    username_candidate TEXT,
+    phone_number       TEXT UNIQUE
+);
+
+CREATE TABLE cat_candidates
+(
+    id_candidate       bigint PRIMARY KEY,
+    name_candidate     TEXT,
+    username_candidate TEXT,
+    phone_number       TEXT UNIQUE
+);
