@@ -4,12 +4,17 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.BaseRequest;
+import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import tgbots.nipbot.service.handlers.HandlerUpdates;
+import tgbots.nipbot.service.mentions.MentionSendReport;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+
+import static tgbots.nipbot.constants.StringConstants.MENTION_TO_SEND_REPORT;
 
 /**
  * Класс, содержащий логику получения обновлений с TelegramAPI,
@@ -19,9 +24,11 @@ import java.util.List;
 public class TelegramBotUpdatesListener implements UpdatesListener {
 
     private final HandlerUpdates handlerUpdates;
+    private final MentionSendReport mentionSendReport;
 
-    public TelegramBotUpdatesListener(HandlerUpdates handlerUpdates) {
+    public TelegramBotUpdatesListener(HandlerUpdates handlerUpdates, MentionSendReport mentionSendReport) {
         this.handlerUpdates = handlerUpdates;
+        this.mentionSendReport = mentionSendReport;
     }
 
     @Autowired
@@ -47,6 +54,16 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             }
         });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
+    }
+
+
+
+    @Scheduled(cron = "0 0 12 * * *")
+    public void mentionForUserToSendReport() {
+        List<Long> ids = mentionSendReport.idsForMentionToSendReport();
+        if (!ids.isEmpty()) {
+            ids.forEach(id -> telegramBot.execute(new SendMessage(id, MENTION_TO_SEND_REPORT)));
+        }
     }
 
 }
