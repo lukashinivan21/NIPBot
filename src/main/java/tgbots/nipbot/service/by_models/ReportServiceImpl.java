@@ -72,6 +72,7 @@ public class ReportServiceImpl implements ReportService {
         Report report = findReportById(id);
         List<Report> reports = candidate.getReports();
         reports.remove(report);
+        reportRepository.deleteById(id);
         candidate.setReports(reports);
         candidateService.updateCandidate(candidate);
     }

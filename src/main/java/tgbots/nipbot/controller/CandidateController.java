@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tgbots.nipbot.exception.NotValidPhoneNumberException;
 import tgbots.nipbot.models.Candidate;
+import tgbots.nipbot.models.DogCandidate;
 import tgbots.nipbot.service.Validation;
 import tgbots.nipbot.service.by_models.CandidateServiceImpl;
 
@@ -25,7 +26,7 @@ public class CandidateController {
                                                      @RequestParam(required = false) String secondName,
                                                      @RequestParam String phoneNumber,
                                                      @RequestParam(required = false, defaultValue = "false") boolean addPeriod){
-        Candidate candidate = new Candidate();
+        Candidate candidate = new DogCandidate();
         if(Validation.PATTERN_PHONE_NUMBER.matcher(phoneNumber).matches()){
             candidate.setPhoneNumber(phoneNumber);
         } else {
@@ -43,7 +44,7 @@ public class CandidateController {
                                                      @RequestParam String firstName,
                                                      @RequestParam(required = false) String secondName,
                                                      @RequestParam String phoneNumber){
-        Candidate candidate = new Candidate();
+        Candidate candidate = new DogCandidate();
         if(Validation.PATTERN_PHONE_NUMBER.matcher(phoneNumber).matches()){
             candidate.setPhoneNumber(phoneNumber);
         } else {
@@ -70,8 +71,8 @@ public class CandidateController {
     }
 
     @GetMapping(value = "/find-all")
-    public ResponseEntity<List<Candidate>> findAllCandidate(){
-        List<Candidate> candidates = service.findAll();
+    public ResponseEntity<List<DogCandidate>> findAllCandidate(){
+        List<DogCandidate> candidates = service.findAll();
         return ResponseEntity.ok().body(candidates);
     }
 }

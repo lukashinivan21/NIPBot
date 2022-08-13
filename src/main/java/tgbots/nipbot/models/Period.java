@@ -9,7 +9,6 @@ import java.time.LocalDate;
 @Table(name = "periods")
 public class Period {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id_period")
     private Long id;
 
@@ -23,7 +22,7 @@ public class Period {
     private Integer extraDays;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "period", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "period", fetch = FetchType.LAZY)
     private Candidate candidate;
 
     public Period() {
@@ -87,7 +86,6 @@ public class Period {
                 ", startDate=" + startDate +
                 ", trialDays=" + trialDays +
                 ", extraDays=" + extraDays +
-                ", candidate=" + candidate +
                 '}';
     }
 }

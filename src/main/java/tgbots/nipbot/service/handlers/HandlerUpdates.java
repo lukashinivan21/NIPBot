@@ -3,6 +3,7 @@ package tgbots.nipbot.service.handlers;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.BaseRequest;
 import org.springframework.stereotype.Service;
+import tgbots.nipbot.constants.Shelter;
 
 /**
  * Класс, служащий для фильрации обновлений.
@@ -11,10 +12,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class HandlerUpdates {
 
+    private final ShelterDeterminant shelterDeterminant;
     private final HandlerMessages handlerMessages;
     private final HandlerCallbackQuery handlerCallbackQuery;
 
-    public HandlerUpdates(HandlerMessages handlerMessages, HandlerCallbackQuery handlerCallbackQuery) {
+    public HandlerUpdates(ShelterDeterminant shelterDeterminant, HandlerMessages handlerMessages, HandlerCallbackQuery handlerCallbackQuery) {
+        this.shelterDeterminant = shelterDeterminant;
         this.handlerMessages = handlerMessages;
         this.handlerCallbackQuery = handlerCallbackQuery;
     }
@@ -28,10 +31,12 @@ public class HandlerUpdates {
     public BaseRequest choiceHandler(Update update){
         if(update != null){
             if(update.message() != null){
-                return handlerMessages.handle(update);
+                Shelter shelter = shelterDeterminant.determinate(update.message());
+                return handlerMessages.handle(update, shelter);
             }
             if(update.callbackQuery() != null){
-                return handlerCallbackQuery.handle(update);
+                Shelter shelter = shelterDeterminant.determinate(update.callbackQuery());
+                return handlerCallbackQuery.handle(update, shelter);
             }
         }
         return null;

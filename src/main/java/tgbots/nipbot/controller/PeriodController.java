@@ -19,8 +19,10 @@ public class PeriodController {
     }
 
     @PostMapping(value = "/create")
-    public ResponseEntity<Period> createPeriod(@RequestParam(required = false, defaultValue = "30") Integer trialDays){
+    public ResponseEntity<Period> createPeriod(@RequestParam Long id,
+                                               @RequestParam(required = false, defaultValue = "30") Integer trialDays){
         Period period = new Period();
+        period.setId(id);
         period.setStartDate(LocalDate.now());
         period.setTrialDays(trialDays);
         Period periodToSave = service.savePeriod(period);
@@ -58,16 +60,14 @@ public class PeriodController {
     }
 
     @PostMapping(value = "/add-period")
-    public ResponseEntity<Period> addPeriodToCandidate(@RequestParam Long id,
-                                                       @RequestParam Long candidateId){
-        Period period = service.addPeriodCandidate(id, candidateId);
+    public ResponseEntity<Period> addPeriodToCandidate(@RequestParam Long complexId){
+        Period period = service.addPeriodCandidate(complexId);
         return ResponseEntity.ok().body(period);
     }
 
     @DeleteMapping(value = "/remove-period")
-    public ResponseEntity removePeriodToCandidate(@RequestParam Long id,
-                                                  @RequestParam Long candidateId){
-        service.removePeriodCandidate(id, candidateId);
+    public ResponseEntity removePeriodToCandidate(@RequestParam Long complexId){
+        service.removePeriodCandidate(complexId);
         return ResponseEntity.ok().build();
     }
 }

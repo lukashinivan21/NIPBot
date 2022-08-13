@@ -4,8 +4,10 @@ import com.pengrad.telegrambot.model.Message;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import tgbots.nipbot.models.Candidate;
+import tgbots.nipbot.models.DogCandidate;
 import tgbots.nipbot.models.Period;
-import tgbots.nipbot.repositories.CandidateRepository;
+import tgbots.nipbot.repositories.CatCandidateRepository;
+import tgbots.nipbot.repositories.DogCandidateRepository;
 import tgbots.nipbot.service.by_models.interfaces.CandidateService;
 
 import javax.persistence.EntityExistsException;
@@ -19,15 +21,17 @@ import static tgbots.nipbot.service.Validation.PATTERN_PHONE_NUMBER_AND_FULL_NAM
 @Service
 public class CandidateServiceImpl implements CandidateService {
 
-    private final CandidateRepository candidateRepository;
+    private final DogCandidateRepository dogCandidateRepository;
+    private final CatCandidateRepository catCandidateRepository;
 
-    public CandidateServiceImpl(CandidateRepository candidateRepository) {
-        this.candidateRepository = candidateRepository;
+    public CandidateServiceImpl(DogCandidateRepository dogCandidateRepository, CatCandidateRepository catCandidateRepository) {
+        this.dogCandidateRepository = dogCandidateRepository;
+        this.catCandidateRepository = catCandidateRepository;
     }
 
     @Override
     public Candidate saveCandidate(Candidate candidate, boolean addPeriod){
-        if(candidateRepository.findById(candidate.getId()).isEmpty()){
+        if(dogCandidateRepository.findById(candidate.getId()).isEmpty()){
             if(addPeriod){
                 Period period = new Period();
                 period.setStartDate(LocalDate.now());
@@ -35,22 +39,26 @@ public class CandidateServiceImpl implements CandidateService {
                 period.setCandidate(candidate);
                 candidate.setPeriod(period);
             }
-            return candidateRepository.save(candidate);
+            return dogCandidateRepository.save((DogCandidate) candidate);
         }
         throw new EntityExistsException();
     }
 
     @Override
     public Candidate updateCandidate(Candidate candidate){
-        Optional<Candidate> candidateOptional = candidateRepository.findById(candidate.getId());
+        Optional<DogCandidate> candidateOptional = dogCandidateRepository.findById(candidate.getId());
         if(candidateOptional.isPresent()){
-            Candidate candidateByOptional = candidateOptional.get();
-            candidateByOptional.setFirstName(candidate.getFirstName());
-            if(candidateByOptional.getSecondName() == null){
-                candidateByOptional.setSecondName(candidate.getSecondName());
+            DogCandidate candidateByOptional = candidateOptional.get();
+            if(candidate.getSecondName() == null) {
+                candidate.setSecondName(candidateByOptional.getSecondName());
             }
-            candidateByOptional.setPhoneNumber(candidate.getPhoneNumber());
-            return candidateRepository.save(candidateByOptional);
+            if(candidate.getPeriod() == null){
+                candidate.setPeriod(candidateByOptional.getPeriod());
+            };
+            if(candidate.getReports().size() < candidateByOptional.getReports().size() || candidate.getReports() == null){
+                candidate.setReports(candidateByOptional.getReports());
+            }
+            return dogCandidateRepository.save((DogCandidate) candidate);
         }
         throw new NotFoundException(candidate + " Not found");
     }
@@ -59,7 +67,7 @@ public class CandidateServiceImpl implements CandidateService {
     public Candidate updateCandidate(Message msg, String candidateString){
         Matcher matcher = PATTERN_PHONE_NUMBER_AND_FULL_NAME.matcher(candidateString);
         if (matcher.matches()) {
-            Candidate candidate = new Candidate();
+            Candidate candidate = new DogCandidate();
             candidate.setId(msg.chat().id());
             candidate.setUsername(msg.from().username());
             System.out.println(matcher.group(0));
@@ -72,7 +80,7 @@ public class CandidateServiceImpl implements CandidateService {
             if(strings.length >= 3){
                 candidate.setSecondName(strings[2]);
             }
-            candidateRepository.save(candidate);
+            dogCandidateRepository.save((DogCandidate)candidate);
             return candidate;
         }
         throw new NotFoundException(candidateString + " Not found");
@@ -80,17 +88,21 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public Candidate findCandidateById(Long id){
-        Optional<Candidate> candidateOptional = candidateRepository.findById(id);
-        return candidateOptional.orElse(null);
+        Optional<DogCandidate> candidateOptional = dogCandidateRepository.findById(id);
+        if(candidateOptional.isPresent()){
+            DogCandidate dogCandidate = candidateOptional.get();
+            return dogCandidate;
+        }
+        throw new NotFoundException(id + " candidate Not found!");
     }
 
     @Override
     public void removeCandidate(Long id){
-        candidateRepository.deleteById(id);
+        dogCandidateRepository.deleteById(id);
     }
 
     @Override
-    public List<Candidate> findAll(){
-        return candidateRepository.findAll();
+    public List<DogCandidate> findAll(){
+        return dogCandidateRepository.findAll();
     }
 }

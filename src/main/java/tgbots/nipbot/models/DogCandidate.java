@@ -11,5 +11,11 @@ public class DogCandidate extends Candidate{
         super();
     }
 
+    private DogCandidate(Long id, String firstName, String secondName, String username) {
+        super(id, firstName, secondName, username);
+    }
 
+    public static DogCandidate create(Long id, String firstName, String secondName, String username){
+        return new DogCandidate(id, firstName , secondName, username);
+    }
 }

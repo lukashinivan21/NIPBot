@@ -33,31 +33,30 @@ create table reports(
 );
 
 create table periods(
-    id_period bigserial unique not null primary key,
+    id_period bigint unique not null primary key,
     start_date date not null,
     trial_days int default 30,
     extra_days int
 );
 
-
-
- 
 -- changeSet ivan:2
 
 CREATE TABLE dog_candidates
 (
-    id_candidate       bigint PRIMARY KEY,
-    name_candidate     TEXT,
-    username_candidate TEXT,
-    phone_number       TEXT UNIQUE
+    id_candidate            bigint PRIMARY KEY,
+    first_name_candidate    text not null,
+    second_name_candidate   text,
+    username_candidate      TEXT,
+    phone_number            TEXT UNIQUE
 );
 
 CREATE TABLE cat_candidates
 (
-    id_candidate       bigint PRIMARY KEY,
-    name_candidate     TEXT,
-    username_candidate TEXT,
-    phone_number       TEXT UNIQUE
+    id_candidate            bigint unique not null PRIMARY KEY,
+    first_name_candidate    text not null,
+    second_name_candidate   text,
+    username_candidate      TEXT,
+    phone_number            TEXT UNIQUE
 );
 
    

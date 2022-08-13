@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "candidates")
+//@Table(name = "candidates")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Candidate {
+public abstract class Candidate {
 
     @Id
     @Column(name = "id_candidate")
@@ -25,7 +25,7 @@ public class Candidate {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Report> reports = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
@@ -35,15 +35,11 @@ public class Candidate {
     public Candidate() {
     }
 
-    private Candidate(Long id, String firstName, String secondName, String username) {
+    protected Candidate(Long id, String firstName, String secondName, String username) {
         this.id = id;
         this.firstName = firstName;
         this.secondName = secondName;
         this.username = username;
-    }
-
-    public static Candidate create(Long id, String firstName, String secondName, String username){
-        return new Candidate(id, firstName , secondName, username);
     }
 
     public void addReport(Report report){

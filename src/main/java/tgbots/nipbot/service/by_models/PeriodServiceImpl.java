@@ -55,18 +55,26 @@ public class PeriodServiceImpl implements PeriodService {
     }
 
     @Override
-    public Period addPeriodCandidate(Long id, Long candidateId){
-        Candidate candidate = candidateService.findCandidateById(candidateId);
+    public Period addPeriodCandidate(Long id){
+        Candidate candidate = candidateService.findCandidateById(id);
         Period period = findPeriodById(id);
-        candidate.setPeriod(period);
-        period.setCandidate(candidate);
+        if(candidate == null){
+            throw new NotFoundException(id + " candidate Not found!");
+        }
+        if(period == null){
+            throw new NotFoundException(id + " period Not found!");
+        }
+        period.setCandidate(candidateService.findCandidateById(id));
+        candidate.setPeriod(findPeriodById(id));
         candidateService.updateCandidate(candidate);
+        System.out.println(candidate);
+        System.out.println(period);
         return period;
     }
 
     @Override
-    public void removePeriodCandidate(Long id, Long candidateId){
-        Candidate candidate = candidateService.findCandidateById(candidateId);
+    public void removePeriodCandidate(Long id){
+        Candidate candidate = candidateService.findCandidateById(id);
         Period period = findPeriodById(id);
         period.setCandidate(null);
         candidate.setPeriod(null);

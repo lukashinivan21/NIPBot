@@ -16,7 +16,7 @@ public interface PeriodService {
 
     public List<Period> findAll();
 
-    Period addPeriodCandidate(Long id, Long candidateId);
+    Period addPeriodCandidate(Long id);
 
-    void removePeriodCandidate(Long id, Long candidateId);
+    void removePeriodCandidate(Long id);
 }

@@ -2,6 +2,7 @@ package tgbots.nipbot.service.by_models.interfaces;
 
 import com.pengrad.telegrambot.model.Message;
 import tgbots.nipbot.models.Candidate;
+import tgbots.nipbot.models.DogCandidate;
 
 import java.util.List;
 
@@ -17,5 +18,5 @@ public interface CandidateService {
 
     public void removeCandidate(Long id);
 
-    public List<Candidate> findAll();
+    public List<DogCandidate> findAll();
 }
