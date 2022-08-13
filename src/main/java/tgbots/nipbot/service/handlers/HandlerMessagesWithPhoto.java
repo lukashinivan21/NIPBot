@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import tgbots.nipbot.constants.Shelter;
 import tgbots.nipbot.models.CatCandidate;
 import tgbots.nipbot.models.CatReport;
 import tgbots.nipbot.models.DogCandidate;
@@ -29,7 +30,6 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 import static tgbots.nipbot.constants.StringConstants.*;
@@ -61,7 +61,7 @@ public class HandlerMessagesWithPhoto implements Handler {
      * @return {@link BaseRequest}
      */
     @Override
-    public BaseRequest handle(Update update) {
+    public BaseRequest handle(Update update, Shelter shelter) {
 
         Message message = update.message();
 
@@ -85,7 +85,7 @@ public class HandlerMessagesWithPhoto implements Handler {
             String path = file.filePath();
             try {
                 byte[] data = bot.getFileContent(file);
-                uploadReport(chatId, data, file, userName, today, time, caption, path, dateToday);
+                uploadReport(chatId, data, file, userName, today, time, caption, path, dateToday, shelter);
                 sendMessage = collectSendMessage(chatId, REPORT_OK);
             } catch (IOException e) {
                 logger.info("Something happens...");
@@ -109,17 +109,17 @@ public class HandlerMessagesWithPhoto implements Handler {
     private String token;
 
 //    метод, отвечающий за загрузку фото из отчетов и сохранение информации в базу данных
-    private void uploadReport(Long id, byte[] data, File file, String userName, String today, String time, String caption, String path, LocalDate dateToday) throws IOException {
+    private void uploadReport(Long id, byte[] data, File file, String userName, String today, String time, String caption, String path, LocalDate dateToday, Shelter shelter) throws IOException {
         logger.info("Upload report from user with id: {}, username: {}", id, userName);
-        List<Long> dogIds = dogCandidateRepository.findAll().stream().map(DogCandidate::getId).toList();
-        List<Long> catIds = catCandidateRepository.findAll().stream().map(CatCandidate::getId).toList();
+        //List<Long> dogIds = dogCandidateRepository.findAll().stream().map(DogCandidate::getId).toList();
+        //List<Long> catIds = catCandidateRepository.findAll().stream().map(CatCandidate::getId).toList();
         String secondFolder = null;
-        if (dogIds.contains(id)) {
+        if (shelter.equals(Shelter.DOG)) {
             secondFolder = "/dog_reports/";
-        } else if (catIds.contains(id)) {
+        } else if (shelter.equals(Shelter.CAT)) {
             secondFolder = "/cat_reports/";
         }
-        Path filePath = Path.of(reportsDir + secondFolder + id + " " + userName + "/" + today, userName + " " + time + "." + getExtension(path));
+        Path filePath = Path.of(reportsDir + secondFolder + id + " " + userName + "/" + today, userName + " " + time.replace(":", ".") + "." + getExtension(path));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
 
@@ -133,7 +133,7 @@ public class HandlerMessagesWithPhoto implements Handler {
             bis.transferTo(bos);
         }
 
-        if (dogIds.contains(id)) {
+        if (shelter.equals(Shelter.DOG)) {
             DogCandidate dogCandidate = dogCandidateRepository.findDogCandidateById(id);
             DogReport newDogReport = new DogReport();
             newDogReport.setData(data);
@@ -145,7 +145,7 @@ public class HandlerMessagesWithPhoto implements Handler {
 
             reportDogRepository.save(newDogReport);
 
-        } else if (catIds.contains(id)) {
+        } else if (shelter.equals(Shelter.CAT)) {
             CatCandidate catCandidate = catCandidateRepository.findCatCandidateById(id);
             CatReport newCatReport = new CatReport();
             newCatReport.setCatCandidate(catCandidate);

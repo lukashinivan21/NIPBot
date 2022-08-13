@@ -21,16 +21,18 @@ public class ShelterDeterminant {
 
     public Shelter determinate(Message message){
         String text = message.text();
-        Long id = message.chat().id();
-        if (cacheShelter.getShelter(id) != null) {
-            return cacheShelter.getShelter(id);
-        }
-        if(text.equals(DOG_SHELTER.getTextButton())){
-            cacheShelter.addUpdateShelter(id, DOG);
-            return DOG;
-        } else if(text.equals(CAT_SHELTER.getTextButton())){
-            cacheShelter.addUpdateShelter(id, CAT);
-            return CAT;
+        if (text != null) {
+            Long id = message.chat().id();
+            if (cacheShelter.getShelter(id) != null) {
+                return cacheShelter.getShelter(id);
+            }
+            if(text.equals(DOG_SHELTER.getTextButton())){
+                cacheShelter.addUpdateShelter(id, DOG);
+                return DOG;
+            } else if(text.equals(CAT_SHELTER.getTextButton())){
+                cacheShelter.addUpdateShelter(id, CAT);
+                return CAT;
+            }
         }
         return Shelter.DEFAULT;
     };

@@ -121,19 +121,6 @@ public class Report {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Report report = (Report) o;
-        return id.equals(report.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Report report = (Report) o;
         return id.equals(report.id) && Objects.equals(pathImage, report.pathImage) && Objects.equals(diet, report.diet) && Objects.equals(generalHealth, report.generalHealth) && Objects.equals(date, report.date) && Objects.equals(candidate, report.candidate);
     }
 

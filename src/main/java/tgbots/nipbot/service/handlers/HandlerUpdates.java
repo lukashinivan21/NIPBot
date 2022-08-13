@@ -17,7 +17,10 @@ public class HandlerUpdates {
     private final HandlerCallbackQuery handlerCallbackQuery;
     private final HandlerMessagesWithPhoto handlerMessagesWithPhoto;
 
-    public HandlerUpdates(ShelterDeterminant shelterDeterminant, HandlerMessages handlerMessages, HandlerCallbackQuery handlerCallbackQuery, HandlerMessagesWithPhoto handlerMessagesWithPhoto) {
+    public HandlerUpdates(ShelterDeterminant shelterDeterminant,
+                          HandlerMessages handlerMessages,
+                          HandlerCallbackQuery handlerCallbackQuery,
+                          HandlerMessagesWithPhoto handlerMessagesWithPhoto) {
         this.handlerMessages = handlerMessages;
         this.handlerCallbackQuery = handlerCallbackQuery;
         this.handlerMessagesWithPhoto = handlerMessagesWithPhoto;
@@ -35,14 +38,15 @@ public class HandlerUpdates {
         if(update != null){
             if(update.message() != null){
                 Shelter shelter = shelterDeterminant.determinate(update.message());
-                return handlerMessages.handle(update, shelter);
+                if (update.message().photo() == null) {
+                    return handlerMessages.handle(update, shelter);
+                } else {
+                    return handlerMessagesWithPhoto.handle(update, shelter);
+                }
             }
             if(update.callbackQuery() != null){
                 Shelter shelter = shelterDeterminant.determinate(update.callbackQuery());
                 return handlerCallbackQuery.handle(update, shelter);
-            }
-            if (update.message() != null && update.message().photo() != null) {
-                handlerMessagesWithPhoto.handle(update);
             }
         }
         return null;
