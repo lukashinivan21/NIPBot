@@ -1,6 +1,7 @@
 package tgbots.nipbot.service.by_models;
 
 import org.springframework.stereotype.Service;
+import tgbots.nipbot.constants.Shelter;
 import tgbots.nipbot.models.Candidate;
 import tgbots.nipbot.models.Report;
 import tgbots.nipbot.repositories.ReportRepository;
@@ -55,19 +56,22 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public Report addReportCandidate(Long id, Long candidateId){
-        Candidate candidate = candidateService.findCandidateById(candidateId);
-        Report report = findReportById(id);
-        List<Report> reports = candidate.getReports();
-        report.setCandidate(candidateService.findCandidateById(candidateId));
-        reports.add(report);
-        candidate.setReports(reports);
-        candidateService.updateCandidate(candidate);
-        return report;
+    public Report addReportCandidate(Long id, Long candidateId, Shelter shelter){
+        if (shelter.equals(Shelter.DOG)) {
+            Candidate candidate = candidateService.findCandidateById(candidateId);
+            Report report = findReportById(id);
+            List<Report> reports = candidate.getReports();
+            report.setCandidate(candidateService.findCandidateById(candidateId));
+            reports.add(report);
+            candidate.setReports(reports);
+            candidateService.updateCandidate(candidate);
+            return report;
+        }
+        return null;
     }
 
     @Override
-    public void removeReportCandidate(Long id, Long candidateId){
+    public void removeReportCandidate(Long id, Long candidateId, Shelter shelter){
         Candidate candidate = candidateService.findCandidateById(candidateId);
         Report report = findReportById(id);
         List<Report> reports = candidate.getReports();

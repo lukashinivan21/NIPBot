@@ -1,7 +1,9 @@
 package tgbots.nipbot.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tgbots.nipbot.constants.Shelter;
 import tgbots.nipbot.models.Report;
 import tgbots.nipbot.service.by_models.ReportServiceImpl;
 
@@ -63,15 +65,25 @@ public class ReportController {
 
     @PostMapping(value = "/add-report")
     public ResponseEntity<Report> addReportToCandidate(@RequestParam Long id,
-                                                       @RequestParam Long candidateId){
-        Report report = service.addReportCandidate(id, candidateId);
-        return ResponseEntity.ok().body(report);
+                                                       @RequestParam Long candidateId,
+                                                       @RequestParam(required = false, defaultValue = "DOG") String shelter){
+        String shelterUp = shelter.toUpperCase();
+        if(shelterUp.equals(Shelter.DOG.name())){
+            Report report = service.addReportCandidate(id, candidateId, Shelter.DOG);
+            return ResponseEntity.ok().body(report);
+        }
+        if(shelterUp.equals(Shelter.CAT.name())){
+            Report report = service.addReportCandidate(id, candidateId, Shelter.CAT);
+            return ResponseEntity.ok().body(report);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    //!!!НЕ ЗАБЫТЬ СДЕЛАТЬ УСЛОВИЕ
     @DeleteMapping(value = "/remove-report")
     public ResponseEntity removeReportToCandidate(@RequestParam Long id,
                                                   @RequestParam Long candidateId){
-        service.removeReportCandidate(id, candidateId);
+        service.removeReportCandidate(id, candidateId, Shelter.DOG);
         return ResponseEntity.ok().build();
     }
 }
