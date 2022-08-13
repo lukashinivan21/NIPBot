@@ -8,6 +8,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "reports")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -25,6 +26,16 @@ public class Report {
 
     @Column(name = "date")
     private LocalDate date;
+
+    @Column(name = "report_data")
+    @Lob
+    private byte[] data;
+
+    @Column(name = "file_size")
+    private Long fileSize;
+
+    @Column(name = "caption")
+    private String caption;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -79,6 +90,43 @@ public class Report {
 
     public void setCandidate(Candidate candidate) {
         this.candidate = candidate;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
+    }
+
+    public Long getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(Long fileSize) {
+        this.fileSize = fileSize;
+    }
+
+    public String getCaption() {
+        return caption;
+    }
+
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Report report = (Report) o;
+        return id.equals(report.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override

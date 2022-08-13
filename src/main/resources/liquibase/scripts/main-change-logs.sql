@@ -1,35 +1,39 @@
 --liquibase formatted sql
 
---changeset pavel:1
-create table candidates(
-    id_candidate bigint unique not null primary key,
-    first_name_candidate text not null,
+--changeSet pavel:1
+create table candidates
+(
+    id_candidate          bigint unique not null primary key,
+    first_name_candidate  text          not null,
     second_name_candidate text,
-    username_candidate text,
-    phone_number text unique
+    username_candidate    text,
+    phone_number          text unique
 );
 
-create table dogs(
-    id_dog bigserial unique not null primary key,
-    name_dog text not null,
-    age real
+create table dogs
+(
+    id_dog   bigserial unique not null primary key,
+    name_dog text             not null,
+    age      real
 );
 
-create table volunteers(
-    id_volunteer bigint unique not null primary key,
-    first_name_volunteer text not null,
+create table volunteers
+(
+    id_volunteer          bigint unique not null primary key,
+    first_name_volunteer  text          not null,
     second_name_volunteer text,
-    username_volunteer text,
-    password varchar(16) not null
+    username_volunteer    text,
+    password              varchar(16)   not null
 );
 
-create table reports(
-    id_report bigserial unique not null primary key,
-    path_image text,
-    diet text,
+create table reports
+(
+    id_report      bigserial unique not null primary key,
+    path_image     text,
+    diet           text,
     general_health text,
-    date date,
-    time time   
+    date           date,
+    time           time
 );
 
 create table periods(
@@ -59,7 +63,35 @@ CREATE TABLE cat_candidates
     phone_number            TEXT UNIQUE
 );
 
-   
+-- changeSet ivan:3
+
+create table report_dog
+(
+    id_report      bigserial unique not null primary key,
+    path_image     text,
+    diet           text,
+    general_health text,
+    date           date,
+    file_size      bigint           NOT NULL,
+    report_data    bigint           NOT NULL,
+    caption        TEXT             NOT NULL,
+    time           time
+);
+
+create table report_cat
+(
+    id_report      bigserial unique not null primary key,
+    path_image     text,
+    diet           text,
+    general_health text,
+    date           date,
+    file_size      bigint           NOT NULL,
+    report_data    bigint           NOT NULL,
+    caption        TEXT             NOT NULL,
+    time           time
+);
+
+
 
 
 
