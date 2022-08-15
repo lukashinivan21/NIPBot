@@ -1,6 +1,5 @@
 package tgbots.nipbot.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tgbots.nipbot.constants.Shelter;
@@ -23,13 +22,15 @@ public class ReportController {
     @PostMapping(value = "/create")
     public ResponseEntity<Report> createReport(@RequestParam String pathImage,
                                                @RequestParam String diet,
-                                               @RequestParam String generalHealth){
-        Report report = new Report();
+                                               @RequestParam String generalHealth,
+                                               @RequestParam(required = false, defaultValue = "DOG") String shelterText){
+        Shelter shelter = Shelter.fromString(shelterText);
+        Report report = Shelter.choiceReport(shelter);
         report.setPathImage(pathImage);
         report.setDiet(diet);
         report.setGeneralHealth(generalHealth);
         report.setDate(LocalDate.now());
-        return ResponseEntity.ok().body(service.saveReport(report));
+        return ResponseEntity.ok().body(service.saveReport(report, shelter));
     }
 
     @PutMapping(value = "/update")
@@ -37,53 +38,49 @@ public class ReportController {
                                                @RequestParam String pathImage,
                                                @RequestParam String diet,
                                                @RequestParam String generalHealth,
-                                               @RequestParam(required = false) LocalDate date){
-        Report report = new Report();
+                                               @RequestParam(required = false) LocalDate date,
+                                               @RequestParam(required = false, defaultValue = "DOG") String shelterText){
+        Shelter shelter = Shelter.fromString(shelterText);
+        Report report = Shelter.choiceReport(shelter);
         report.setId(id);
         report.setPathImage(pathImage);
         report.setDiet(diet);
         report.setGeneralHealth(generalHealth);
         report.setDate(date);
-        return ResponseEntity.ok().body(service.updateReport(report));
+        return ResponseEntity.ok().body(service.updateReport(report, shelter));
     }
 
     @GetMapping(value = "/find")
-    public ResponseEntity<Report> findReportById(@RequestParam Long id){
-        return ResponseEntity.ok().body(service.findReportById(id));
+    public ResponseEntity<Report> findReportById(@RequestParam Long id,
+                                                 @RequestParam(required = false, defaultValue = "DOG") String shelterText){
+        return ResponseEntity.ok().body(service.findReportById(id, Shelter.fromString(shelterText)));
     }
 
     @DeleteMapping(value = "/remove")
-    public ResponseEntity removeReport(@RequestParam Long id){
-        service.removeReport(id);
+    public ResponseEntity removeReport(@RequestParam Long id,
+                                       @RequestParam(required = false, defaultValue = "DOG") String shelterText){
+        service.removeReport(id, Shelter.fromString(shelterText));
         return ResponseEntity.ok().build();
     }
 
     @GetMapping(value = "/find-all")
-    public ResponseEntity<List<Report>> findAllReport(){
-        return ResponseEntity.ok().body(service.findAll());
+    public ResponseEntity<List> findAllReport(@RequestParam(required = false, defaultValue = "DOG") String shelterText){
+        return ResponseEntity.ok().body(service.findAll(Shelter.fromString(shelterText)));
     }
 
     @PostMapping(value = "/add-report")
     public ResponseEntity<Report> addReportToCandidate(@RequestParam Long id,
                                                        @RequestParam Long candidateId,
-                                                       @RequestParam(required = false, defaultValue = "DOG") String shelter){
-        String shelterUp = shelter.toUpperCase();
-        if(shelterUp.equals(Shelter.DOG.name())){
-            Report report = service.addReportCandidate(id, candidateId, Shelter.DOG);
-            return ResponseEntity.ok().body(report);
-        }
-        if(shelterUp.equals(Shelter.CAT.name())){
-            Report report = service.addReportCandidate(id, candidateId, Shelter.CAT);
-            return ResponseEntity.ok().body(report);
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                                                       @RequestParam(required = false, defaultValue = "DOG") String shelterText){
+        Report report = service.addReportCandidate(id, candidateId, Shelter.fromString(shelterText));
+        return ResponseEntity.ok().body(report);
     }
 
-    //!!!НЕ ЗАБЫТЬ СДЕЛАТЬ УСЛОВИЕ
     @DeleteMapping(value = "/remove-report")
     public ResponseEntity removeReportToCandidate(@RequestParam Long id,
-                                                  @RequestParam Long candidateId){
-        service.removeReportCandidate(id, candidateId, Shelter.DOG);
+                                                  @RequestParam Long candidateId,
+                                                  @RequestParam(required = false, defaultValue = "DOG") String shelterText){
+        service.removeReportCandidate(id, candidateId, Shelter.fromString(shelterText));
         return ResponseEntity.ok().build();
     }
 }

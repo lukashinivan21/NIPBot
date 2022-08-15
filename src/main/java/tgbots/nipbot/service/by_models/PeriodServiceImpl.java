@@ -2,6 +2,7 @@ package tgbots.nipbot.service.by_models;
 
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
+import tgbots.nipbot.constants.Shelter;
 import tgbots.nipbot.models.Candidate;
 import tgbots.nipbot.models.Period;
 import tgbots.nipbot.repositories.PeriodRepository;
@@ -55,8 +56,8 @@ public class PeriodServiceImpl implements PeriodService {
     }
 
     @Override
-    public Period addPeriodCandidate(Long id){
-        Candidate candidate = candidateService.findCandidateById(id);
+    public Period addPeriodCandidate(Long id, Shelter shelter){
+        Candidate candidate = candidateService.findCandidateById(id, shelter);
         Period period = findPeriodById(id);
         if(candidate == null){
             throw new NotFoundException(id + " candidate Not found!");
@@ -64,21 +65,21 @@ public class PeriodServiceImpl implements PeriodService {
         if(period == null){
             throw new NotFoundException(id + " period Not found!");
         }
-        period.setCandidate(candidateService.findCandidateById(id));
+        period.setCandidate(candidateService.findCandidateById(id, shelter));
         candidate.setPeriod(findPeriodById(id));
-        candidateService.updateCandidate(candidate);
+        candidateService.updateCandidate(candidate, shelter);
         System.out.println(candidate);
         System.out.println(period);
         return period;
     }
 
     @Override
-    public void removePeriodCandidate(Long id){
-        Candidate candidate = candidateService.findCandidateById(id);
+    public void removePeriodCandidate(Long id, Shelter shelter){
+        Candidate candidate = candidateService.findCandidateById(id, shelter);
         Period period = findPeriodById(id);
         period.setCandidate(null);
         candidate.setPeriod(null);
-        candidateService.updateCandidate(candidate);
+        candidateService.updateCandidate(candidate, shelter);
     }
 
 }

@@ -7,9 +7,8 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
-@Table(name = "reports")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Report {
+public abstract class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id_report")

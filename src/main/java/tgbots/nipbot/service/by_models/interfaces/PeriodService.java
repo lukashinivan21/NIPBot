@@ -1,5 +1,6 @@
 package tgbots.nipbot.service.by_models.interfaces;
 
+import tgbots.nipbot.constants.Shelter;
 import tgbots.nipbot.models.Period;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public interface PeriodService {
 
     public List<Period> findAll();
 
-    Period addPeriodCandidate(Long id);
+    Period addPeriodCandidate(Long id, Shelter shelter);
 
-    void removePeriodCandidate(Long id);
+    void removePeriodCandidate(Long id, Shelter shelter);
 }

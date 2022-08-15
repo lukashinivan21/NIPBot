@@ -2,6 +2,7 @@ package tgbots.nipbot.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tgbots.nipbot.constants.Shelter;
 import tgbots.nipbot.models.Period;
 import tgbots.nipbot.service.by_models.PeriodServiceImpl;
 
@@ -60,14 +61,16 @@ public class PeriodController {
     }
 
     @PostMapping(value = "/add-period")
-    public ResponseEntity<Period> addPeriodToCandidate(@RequestParam Long complexId){
-        Period period = service.addPeriodCandidate(complexId);
+    public ResponseEntity<Period> addPeriodToCandidate(@RequestParam Long complexId,
+                                                       @RequestParam(required = false, defaultValue = "DOG") String shelterText){
+        Period period = service.addPeriodCandidate(complexId, Shelter.fromString(shelterText));
         return ResponseEntity.ok().body(period);
     }
 
     @DeleteMapping(value = "/remove-period")
-    public ResponseEntity removePeriodToCandidate(@RequestParam Long complexId){
-        service.removePeriodCandidate(complexId);
+    public ResponseEntity removePeriodToCandidate(@RequestParam Long complexId,
+                                                  @RequestParam(required = false, defaultValue = "DOG") String shelterText){
+        service.removePeriodCandidate(complexId, Shelter.fromString(shelterText));
         return ResponseEntity.ok().build();
     }
 }

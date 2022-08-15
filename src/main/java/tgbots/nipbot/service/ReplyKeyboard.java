@@ -187,7 +187,8 @@ public class ReplyKeyboard {
                         new KeyboardButton(DOG_INFO_ABOUT_SHELTER.getTextButton()))
                 .addRow(new KeyboardButton(DOG_HOW_TAKE_FROM_SHELTER.getTextButton()))
                 .addRow(new KeyboardButton(DOG_SEND_PET_REPORT.getTextButton()))
-                .addRow(new KeyboardButton(DOG_CALL_VOLUNTEER.getTextButton()))
+                .addRow(new KeyboardButton(DOG_CALL_VOLUNTEER.getTextButton()),
+                        new KeyboardButton(BACK_MAIN_MENU.getTextButton()))
                 .oneTimeKeyboard(true);
     }
 
@@ -233,7 +234,8 @@ public class ReplyKeyboard {
                 new KeyboardButton(CAT_INFO_ABOUT_SHELTER.getTextButton()))
                 .addRow(new KeyboardButton(CAT_HOW_TAKE_FROM_SHELTER.getTextButton()))
                 .addRow(new KeyboardButton(CAT_SEND_PET_REPORT.getTextButton()))
-                .addRow(new KeyboardButton(CAT_CALL_VOLUNTEER.getTextButton()))
+                .addRow(new KeyboardButton(CAT_CALL_VOLUNTEER.getTextButton()),
+                        new KeyboardButton(BACK_MAIN_MENU.getTextButton()))
                 .oneTimeKeyboard(true);
     }
 

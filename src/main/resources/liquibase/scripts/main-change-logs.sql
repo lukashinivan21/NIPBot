@@ -1,15 +1,6 @@
 --liquibase formatted sql
 
 --changeSet pavel:1
-create table candidates
-(
-    id_candidate          bigint unique not null primary key,
-    first_name_candidate  text          not null,
-    second_name_candidate text,
-    username_candidate    text,
-    phone_number          text unique
-);
-
 create table dogs
 (
     id_dog   bigserial unique not null primary key,
@@ -24,16 +15,6 @@ create table volunteers
     second_name_volunteer text,
     username_volunteer    text,
     password              varchar(16)   not null
-);
-
-create table reports
-(
-    id_report      bigserial unique not null primary key,
-    path_image     text,
-    diet           text,
-    general_health text,
-    date           date,
-    time           time
 );
 
 create table periods(

@@ -53,8 +53,8 @@ public class HandlerMessages implements Handler{
         }
         if (shelter.equals(DOG)) {
             if (text.equals(DOG_SHELTER.getTextButton())) {
-                if (isFirstTimeUser(chatId)) {
-                    candidateService.saveCandidate(DogCandidate.create(chatId, firstName, secondName, username), false);
+                if (isFirstTimeUser(chatId, shelter)) {
+                    candidateService.saveCandidate(DogCandidate.create(chatId, firstName, secondName, username), false, shelter);
                     return replyKeyboard.addMainMenuDog(new SendMessage(chatId, START_NEW.getResponse().replace("@NAME", firstName)));
                 } else {
                     return replyKeyboard.addMainMenuDog(new SendMessage(chatId, START_OLD.getResponse().replace("@NAME", firstName)));
@@ -68,14 +68,16 @@ public class HandlerMessages implements Handler{
             } else if(text.equals(DOG_CALL_VOLUNTEER.getTextButton())){
                 return new SendMessage(chatId, DOG_CALL_VOLUNTEER.getResponse());
             } else if(Validation.isValidPhoneNumberAndFullName(text)){
-                candidateService.updateCandidate(msg, text);
+                candidateService.updateCandidate(msg, text, shelter);
                 return new SendMessage(chatId, CONTACT_SAVE.getResponse());
+            } else if(text.equals(BACK_MAIN_MENU.getTextButton())){
+                return replyKeyboard.addStartMenu(new SendMessage(chatId, BACK_MAIN_MENU.getResponse()));
             }
         }
         if(shelter.equals(CAT)){
             if (text.equals(CAT_SHELTER.getTextButton())) {
-                if (isFirstTimeUser(chatId)) {
-                    candidateService.saveCandidate(CatCandidate.create(chatId, firstName, secondName, username), false);
+                if (isFirstTimeUser(chatId, shelter)) {
+                    candidateService.saveCandidate(CatCandidate.create(chatId, firstName, secondName, username), false, shelter);
                     return replyKeyboard.addMainMenuCat(new SendMessage(chatId, START_NEW.getResponse().replace("@NAME", firstName)));
                 } else {
                     return replyKeyboard.addMainMenuCat(new SendMessage(chatId, START_OLD.getResponse().replace("@NAME", firstName)));
@@ -89,8 +91,10 @@ public class HandlerMessages implements Handler{
             } else if(text.equals(CAT_CALL_VOLUNTEER.getTextButton())){
                 return new SendMessage(chatId, CAT_CALL_VOLUNTEER.getResponse());
             } else if(Validation.isValidPhoneNumberAndFullName(text)){
-                candidateService.updateCandidate(msg, text);
+                candidateService.updateCandidate(msg, text, shelter);
                 return new SendMessage(chatId, CONTACT_SAVE.getResponse());
+            } else if(text.equals(BACK_MAIN_MENU.getTextButton())){
+                return replyKeyboard.addStartMenu(new SendMessage(chatId, BACK_MAIN_MENU.getResponse()));
             }
         }
         return new SendMessage(chatId, TextForButtons.DEFAULT.getTextButton());
@@ -100,9 +104,9 @@ public class HandlerMessages implements Handler{
      * Метод проверяет первый раз пользователь запускает бота или нет
      * @return true, если пользователь первый раз запускает бота, иначе false
      */
-    private boolean isFirstTimeUser(Long id){
+    private boolean isFirstTimeUser(Long id, Shelter shelter){
         try {
-            candidateService.findCandidateById(id);
+            candidateService.findCandidateById(id, shelter);
         } catch (NotFoundException e) {
             return true;
         }

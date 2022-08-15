@@ -7,17 +7,17 @@ import java.util.List;
 
 public interface ReportService {
 
-    public Report saveReport(Report report);
+    public Report saveReport(Report report, Shelter shelter);
 
-    public Report updateReport(Report report);
+    public Report updateReport(Report report, Shelter shelter);
 
     Report addReportCandidate(Long id, Long candidateId, Shelter shelter);
 
     void removeReportCandidate(Long id, Long candidateId, Shelter shelter);
 
-    public Report findReportById(Long id);
+    public Report findReportById(Long id, Shelter shelter);
 
-    public void removeReport(Long id);
+    public void removeReport(Long id, Shelter shelter);
 
-    public List<Report> findAll();
+    public List<Report> findAll(Shelter shelter);
 }
