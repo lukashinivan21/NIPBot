@@ -4,6 +4,10 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.BaseRequest;
 import org.springframework.stereotype.Service;
 import tgbots.nipbot.constants.Shelter;
+import tgbots.nipbot.models.Volunteer;
+import tgbots.nipbot.repositories.VolunteerRepository;
+
+import java.util.List;
 
 /**
  * Класс, служащий для фильрации обновлений.
@@ -16,15 +20,20 @@ public class HandlerUpdates {
     private final HandlerMessages handlerMessages;
     private final HandlerCallbackQuery handlerCallbackQuery;
     private final HandlerMessagesWithPhoto handlerMessagesWithPhoto;
+    private final VolunteerRepository volunteerRepository;
+    private final HandleCommandFromVolunteer commandFromVolunteer;
 
     public HandlerUpdates(ShelterDeterminant shelterDeterminant,
                           HandlerMessages handlerMessages,
                           HandlerCallbackQuery handlerCallbackQuery,
-                          HandlerMessagesWithPhoto handlerMessagesWithPhoto) {
+                          HandlerMessagesWithPhoto handlerMessagesWithPhoto, VolunteerRepository volunteerRepository,
+                          HandleCommandFromVolunteer commandFromVolunteer) {
         this.handlerMessages = handlerMessages;
         this.handlerCallbackQuery = handlerCallbackQuery;
         this.handlerMessagesWithPhoto = handlerMessagesWithPhoto;
         this.shelterDeterminant = shelterDeterminant;
+        this.volunteerRepository = volunteerRepository;
+        this.commandFromVolunteer = commandFromVolunteer;
     }
 
     /**
@@ -35,8 +44,18 @@ public class HandlerUpdates {
      * @return {@link BaseRequest} или null
      */
     public BaseRequest choiceHandler(Update update){
+
+        Long chatId = update.message().chat().id();
+        List<Long> volIds = volunteerRepository.findAll().stream().map(Volunteer::getId).toList();
+
         if(update != null){
+
             if(update.message() != null){
+
+                if (volIds.contains(chatId)) {
+                   return commandFromVolunteer.message(update);
+                }
+
                 Shelter shelter = shelterDeterminant.determinate(update.message());
                 if (update.message().photo() == null) {
                     return handlerMessages.handle(update, shelter);
@@ -44,6 +63,7 @@ public class HandlerUpdates {
                     return handlerMessagesWithPhoto.handle(update, shelter);
                 }
             }
+
             if(update.callbackQuery() != null){
                 Shelter shelter = shelterDeterminant.determinate(update.callbackQuery());
                 return handlerCallbackQuery.handle(update, shelter);

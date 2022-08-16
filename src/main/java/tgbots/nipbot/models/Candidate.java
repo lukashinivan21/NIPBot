@@ -110,14 +110,6 @@ public abstract class Candidate {
 
     @Override
     public String toString() {
-        return "Candidate{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", secondName='" + secondName + '\'' +
-                ", username='" + username + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", reports=" + reports +
-                ", period=" + period +
-                '}';
+        return String.format("Пользователь с id: %s; ник в телеграм: @%s; имя: %s; фамилия: %s; номер телефона: %s", id, username, firstName, secondName, phoneNumber);
     }
 }
