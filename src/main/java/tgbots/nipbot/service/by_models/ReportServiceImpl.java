@@ -1,5 +1,7 @@
 package tgbots.nipbot.service.by_models;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import tgbots.nipbot.constants.Shelter;
 import tgbots.nipbot.exception.ShelterNotFoundException;
@@ -20,6 +22,7 @@ import static tgbots.nipbot.constants.Shelter.*;
 @Service
 public class ReportServiceImpl implements ReportService {
 
+    private final Logger log = LoggerFactory.getLogger(ReportServiceImpl.class);
     private final ReportDogRepository reportDogRepository;
     private final ReportCatRepository reportCatRepository;
     private final CandidateServiceImpl candidateService;
@@ -37,15 +40,20 @@ public class ReportServiceImpl implements ReportService {
             report.setCaption("caption");
             byte[] bytes = new byte[1];
             report.setData(bytes);
-            return reportDogRepository.save((DogReport) report);
+            Report reportSave = reportDogRepository.save((DogReport) report);
+            log.info("{} save in reportDogRepository", reportSave);
+            return reportSave;
         }
         if (shelter.equals(CAT)) {
             report.setFileSize(1L);
             report.setCaption("caption");
             byte[] bytes = new byte[1];
             report.setData(bytes);
-            return reportCatRepository.save((CatReport) report);
+            Report reportSave = reportCatRepository.save((CatReport) report);
+            log.info("{} save in reportCatRepository", reportSave);
+            return reportSave;
         }
+        log.error("saveReport: {} is not found", shelter);
         throw new ShelterNotFoundException();
     }
 
@@ -66,8 +74,11 @@ public class ReportServiceImpl implements ReportService {
                 if(report.getFileSize() == null){
                     report.setFileSize(reportOptional.get().getFileSize());
                 }
-                return reportDogRepository.save((DogReport) report);
+                Report reportSave = reportDogRepository.save((DogReport) report);
+                log.info("updateReport: {} save in reportDogRepository", reportSave);
+                return reportSave;
             }
+            log.error("updateReport: {} not found in reportDogRepository", reportOptional);
             throw new EntityExistsException();
         }
         if (shelter.equals(CAT)) {
@@ -85,10 +96,14 @@ public class ReportServiceImpl implements ReportService {
                 if(report.getFileSize() == null){
                     report.setFileSize(reportOptional.get().getFileSize());
                 }
-                return reportCatRepository.save((CatReport) report);
+                Report reportSave = reportCatRepository.save((CatReport) report);
+                log.info("updateReport: {} save in reportCatRepository", reportSave);
+                return reportSave;
             }
+            log.error("updateReport: {} not found in reportCatRepository", reportOptional);
             throw new EntityExistsException();
         }
+        log.error("updateReport: {} is not found", shelter);
         throw new ShelterNotFoundException();
     }
 
@@ -102,6 +117,7 @@ public class ReportServiceImpl implements ReportService {
             Optional<CatReport> reportOptional = reportCatRepository.findById(id);
             return reportOptional.orElseThrow(EntityExistsException::new);
         }
+        log.error("findReportById: {} is not found", shelter);
         throw new ShelterNotFoundException();
     }
 
@@ -109,9 +125,12 @@ public class ReportServiceImpl implements ReportService {
     public void removeReport(Long id, Shelter shelter){
         if (shelter.equals(DOG)) {
             reportDogRepository.deleteById(id);
+            log.info("removeReport: {} report is remove in reportDogRepository",id);
         } else if (shelter.equals(CAT)){
             reportCatRepository.deleteById(id);
+            log.info("removeReport: {} report is remove in reportCatRepository",id);
         } else {
+            log.error("removeReport: {} is not found", shelter);
             throw new ShelterNotFoundException();
         }
 
@@ -125,6 +144,7 @@ public class ReportServiceImpl implements ReportService {
         if (shelter.equals(CAT)){
             return reportCatRepository.findAll();
         }
+        log.error("removeReport: {} is not found", shelter);
         throw new ShelterNotFoundException();
     }
 
@@ -137,6 +157,7 @@ public class ReportServiceImpl implements ReportService {
         reports.add(report);
         candidate.setReports(reports);
         candidateService.updateCandidate(candidate, shelter);
+        log.info("report{} add to candidate{}", id, candidateId);
         return report;
     }
 
@@ -150,11 +171,14 @@ public class ReportServiceImpl implements ReportService {
             reportDogRepository.deleteById(id);
             candidate.setReports(reports);
             candidateService.updateCandidate(candidate, shelter);
+            log.info("report{} remove to candidate{}", id, candidateId);
         } else if(shelter.equals(CAT)){
             reportCatRepository.deleteById(id);
             candidate.setReports(reports);
             candidateService.updateCandidate(candidate, shelter);
+            log.info("report{} remove to candidate{}", id, candidateId);
         } else {
+            log.error("removeReportCandidate: {} is not found", shelter);
             throw new ShelterNotFoundException();
         }
     }
