@@ -22,6 +22,7 @@ import tgbots.nipbot.repositories.CatCandidateRepository;
 import tgbots.nipbot.repositories.DogCandidateRepository;
 import tgbots.nipbot.repositories.ReportCatRepository;
 import tgbots.nipbot.repositories.ReportDogRepository;
+import tgbots.nipbot.service.cache.CacheIdsUsersOnTestPeriod;
 
 import java.io.*;
 import java.net.URL;
@@ -44,13 +45,20 @@ public class HandlerMessagesWithPhoto implements Handler {
     private final CatCandidateRepository catCandidateRepository;
     private final ReportDogRepository reportDogRepository;
     private final ReportCatRepository reportCatRepository;
+    private final CacheIdsUsersOnTestPeriod idsTestPeriod;
 
-    public HandlerMessagesWithPhoto(TelegramBot bot, DogCandidateRepository dogCandidateRepository, CatCandidateRepository catCandidateRepository, ReportDogRepository reportDogRepository, ReportCatRepository reportCatRepository) {
+    public HandlerMessagesWithPhoto(TelegramBot bot,
+                                    DogCandidateRepository dogCandidateRepository,
+                                    CatCandidateRepository catCandidateRepository,
+                                    ReportDogRepository reportDogRepository,
+                                    ReportCatRepository reportCatRepository,
+                                    CacheIdsUsersOnTestPeriod idsTestPeriod) {
         this.bot = bot;
         this.dogCandidateRepository = dogCandidateRepository;
         this.catCandidateRepository = catCandidateRepository;
         this.reportDogRepository = reportDogRepository;
         this.reportCatRepository = reportCatRepository;
+        this.idsTestPeriod = idsTestPeriod;
     }
 
     /**
@@ -87,6 +95,7 @@ public class HandlerMessagesWithPhoto implements Handler {
                 byte[] data = bot.getFileContent(file);
                 uploadReport(chatId, data, file, userName, today, time, caption, path, dateToday, shelter);
                 sendMessage = collectSendMessage(chatId, REPORT_OK);
+                idsTestPeriod.addId(chatId);
             } catch (IOException e) {
                 logger.info("Something happens...");
                 e.printStackTrace();
@@ -111,8 +120,8 @@ public class HandlerMessagesWithPhoto implements Handler {
 //    метод, отвечающий за загрузку фото из отчетов и сохранение информации в базу данных
     private void uploadReport(Long id, byte[] data, File file, String userName, String today, String time, String caption, String path, LocalDate dateToday, Shelter shelter) throws IOException {
         logger.info("Upload report from user with id: {}, username: {}", id, userName);
-        //List<Long> dogIds = dogCandidateRepository.findAll().stream().map(DogCandidate::getId).toList();
-        //List<Long> catIds = catCandidateRepository.findAll().stream().map(CatCandidate::getId).toList();
+//        List<Long> dogIds = dogCandidateRepository.findAll().stream().map(DogCandidate::getId).toList();
+//        List<Long> catIds = catCandidateRepository.findAll().stream().map(CatCandidate::getId).toList();
         String secondFolder = null;
         if (shelter.equals(Shelter.DOG)) {
             secondFolder = "/dog_reports/";
