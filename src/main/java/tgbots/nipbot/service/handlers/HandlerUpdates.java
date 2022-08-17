@@ -45,12 +45,14 @@ public class HandlerUpdates {
      */
     public BaseRequest choiceHandler(Update update){
 
-        Long chatId = update.message().chat().id();
+
         List<Long> volIds = volunteerRepository.findAll().stream().map(Volunteer::getId).toList();
 
         if(update != null){
 
             if(update.message() != null){
+
+                Long chatId = update.message().chat().id();
 
                 if (volIds.contains(chatId)) {
                    return commandFromVolunteer.message(update);

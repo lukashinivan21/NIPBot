@@ -173,28 +173,28 @@ public class MentionSendReportImpl implements MentionSendReport {
         List<Long> catIds = idsCatCandidate();
 
 //        Вычисление разницы в днях между текущей датой и датой первого отправленного отчета пользователя приюта для собак.
-//        Если разница равна 30 дням или больше 30 дней на число дней кратное 14, то id пользователя попадает в список пользователей, по испытательным срокам которых нужно принять решение.
+//        Если разница равна 30 дням или больше 30 дней на 14 или 30 дней, то id пользователя попадает в список пользователей, по испытательным срокам которых нужно принять решение.
         if (!dogIds.isEmpty()) {
             for (Long id : dogIds) {
                 List<DogReport> dogReports = reportDogRepository.findDogReportsByDogCandidateId(id).stream().sorted(Comparator.comparing(DogReport::getDate)).toList();
                 LocalDate date = dogReports.get(0).getDate();
                 Period period = Period.between(rightNow, date);
                 int diff = Math.abs(period.getDays());
-                if (diff == DAYS_TEST_PERIOD || (diff > DAYS_TEST_PERIOD && (diff - DAYS_TEST_PERIOD) % EXTRA_DAYS == 0)) {
+                if (diff == DAYS_TEST_PERIOD || diff == DAYS_TEST_PERIOD + EXTRA_DAYS || diff == DAYS_TEST_PERIOD + DAYS_TEST_PERIOD) {
                     resultDogIds.add(id);
                 }
             }
         }
 
 //        Вычисление разницы в днях между текущей датой и датой первого отправленного отчета пользователя приюта для кошек.
-//        Если разница равна 30 дням или больше 30 дней на число дней кратное 14, то id пользователя попадает в список пользователей, по испытательным срокам которых нужно принять решение.
+//        Если разница равна 30 дням или больше 30 дней на 14 или 30 дней, то id пользователя попадает в список пользователей, по испытательным срокам которых нужно принять решение.
         if (!catIds.isEmpty()) {
             for (Long id : catIds) {
                 List<CatReport> catReports = reportCatRepository.findCatReportByCatCandidate_Id(id).stream().sorted(Comparator.comparing(CatReport::getDate)).toList();
                 LocalDate date = catReports.get(0).getDate();
                 Period period = Period.between(rightNow, date);
                 int diff = Math.abs(period.getDays());
-                if (diff == DAYS_TEST_PERIOD || (diff > DAYS_TEST_PERIOD && (diff - DAYS_TEST_PERIOD) % EXTRA_DAYS == 0)) {
+                if (diff == DAYS_TEST_PERIOD || diff == DAYS_TEST_PERIOD + EXTRA_DAYS || diff == DAYS_TEST_PERIOD + DAYS_TEST_PERIOD) {
                     resultCatIds.add(id);
                 }
             }
