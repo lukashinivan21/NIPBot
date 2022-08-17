@@ -44,16 +44,11 @@ public class HandlerUpdates {
      * @return {@link BaseRequest} или null
      */
     public BaseRequest choiceHandler(Update update){
-
-
-        List<Long> volIds = volunteerRepository.findAll().stream().map(Volunteer::getId).toList();
-
         if(update != null){
 
             if(update.message() != null){
-
                 Long chatId = update.message().chat().id();
-
+                List<Long> volIds = volunteerRepository.findAll().stream().map(Volunteer::getId).toList();
                 if (volIds.contains(chatId)) {
                    return commandFromVolunteer.message(update);
                 }
